@@ -118,6 +118,10 @@ dist
 
 node_modules
 
+*.rest
+
+.env
+
 # TernJS port file
 .tern-port
 
