@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import db from "./config/database.config";
 
 import account_route from "./routes/account_route";
+import vehicle_router from "./routes/vehicle_route";
 
 dotenv.config();
 
@@ -14,10 +15,7 @@ db.sync().then(() => console.log("Connected to database"));
 app.use(express.json());
 
 app.use("/account", account_route);
-
-app.get("/", (req: Request, res: Response) => {
-  res.status(200).send("Hello There");
-});
+app.use("/vehicle", vehicle_router);
 
 app.listen(PORT, () =>
   console.log(`Server running at http://localhost:${PORT}`)

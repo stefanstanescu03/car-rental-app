@@ -8,6 +8,7 @@ interface AccountAtt {
   phone_number: string;
   email: string;
   password: string;
+  admin: Boolean;
 }
 
 export class Account extends Model<AccountAtt> {}
@@ -37,6 +38,10 @@ Account.init(
     },
     password: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    admin: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
     },
   },

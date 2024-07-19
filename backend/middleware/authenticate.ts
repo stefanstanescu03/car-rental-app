@@ -19,7 +19,7 @@ export async function authenticateToken(
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
 
-  if (!token) return res.status(401).send({ status: "no auth token" });
+  if (!token) return res.sendStatus(403);
 
   jwt.verify(
     token,
