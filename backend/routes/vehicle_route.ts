@@ -6,7 +6,7 @@ import { authenticateToken } from "../middleware/authenticate";
 
 const router: Router = express.Router();
 
-router.get(
+router.post(
   "/create",
   authenticateToken,
   async (req: Request, res: Response) => {

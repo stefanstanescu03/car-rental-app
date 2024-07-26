@@ -1,9 +1,10 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import dotenv from "dotenv";
 import db from "./config/database.config";
 
 import account_route from "./routes/account_route";
 import vehicle_router from "./routes/vehicle_route";
+import rent_router from "./routes/rent_route";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use("/account", account_route);
 app.use("/vehicle", vehicle_router);
+app.use("/rent", rent_router);
 
 app.listen(PORT, () =>
   console.log(`Server running at http://localhost:${PORT}`)
