@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import { Vehicle } from "../models/vehicle";
 import { Account } from "../models/account";
 import { authenticateToken } from "../middleware/authenticate";
+import { Op } from "@sequelize/core";
+import { WhereAttributeHash } from "sequelize";
 
 const router: Router = express.Router();
 
@@ -48,5 +50,23 @@ router.delete(
     }
   }
 );
+
+router.get("/search/:location", async (req: Request, res: Response) => {
+  try {
+    const { location } = req.params;
+
+    const vehicles: Vehicle[] = await Vehicle.findAll({
+      where: {
+        location: {
+          [Op.like]: `%${location}%`,
+        } as WhereAttributeHash<String>,
+      },
+    });
+
+    res.status(200).send({ values: vehicles });
+  } catch (err) {
+    res.status(400).send({ error: (err as Error).message });
+  }
+});
 
 export default router;
