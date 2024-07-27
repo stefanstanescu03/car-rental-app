@@ -1,0 +1,19 @@
+import { createWebHistory, createRouter } from 'vue-router'
+
+export default createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: '/',
+      component: () => import('@/views/HomeView.vue')
+    },
+    {
+      path: '/login',
+      component: () => import('@/views/LoginView.vue')
+    },
+    {
+      path: '/signup',
+      component: () => import('@/views/SignupView.vue')
+    }
+  ]
+})
