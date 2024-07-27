@@ -119,6 +119,7 @@ dist
 node_modules
 
 *.rest
+*.sql
 
 .env
 
