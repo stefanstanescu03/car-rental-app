@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-row p-5 w-1/2 items-center justify-center">
-    <!-- <img :src="getImgUrl()" alt="img" /> -->
+  <div class="flex flex-row gap-x-5 p-5 items-center justify-center w-full">
+    <img :src="getImgUrl()" alt="img" class="h-1/2" />
     <div class="flex flex-col gap-y-2 w-1/2">
       <div class="flex flex-row gap-2 items-baseline">
         <h1 class="text-gray-900 text-xl font-semibold font-rubik">{{ car_model }}</h1>
@@ -43,11 +43,11 @@ export default {
     'seats',
     'capacity',
     'supplier',
-    'img'
+    'id'
   ],
   methods: {
     getImgUrl() {
-      return ''
+      return `http://localhost:3000/images/${this.id}.jpg`
     }
   }
 }
