@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-row gap-x-5 p-5 items-center justify-center w-full">
-    <img :src="getImgUrl()" alt="img" class="h-1/2" />
-    <div class="flex flex-col gap-y-2 w-1/2">
+  <div class="flex flex-row gap-x-5 p-10 items-center justify-start w-full">
+    <img :src="getImgUrl()" alt="img" class="w-44" />
+    <div class="flex flex-col gap-y-2 w-2/5">
       <div class="flex flex-row gap-2 items-baseline">
         <h1 class="text-gray-900 text-xl font-semibold font-rubik">{{ car_model }}</h1>
         <h1 class="text-sm text-gray-600 font-medium font-rubik">{{ type }}</h1>
@@ -23,7 +23,7 @@
       <div class="flex flex-row items-center gap-x-5">
         <h1 class="text-gray-900 font-rubik font-semibold">{{ price_per_day }} EUR/DAY</h1>
         <button
-          class="border p-1 w-1/6 border-gray-900 rounded-md duration-300 hover:bg-gray-900 hover:text-white"
+          class="border p-1 w-44 border-gray-900 rounded-md duration-300 hover:bg-gray-900 hover:text-white"
         >
           Rent
         </button>
