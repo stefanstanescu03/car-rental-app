@@ -1,7 +1,7 @@
 import express, { Router, Request, Response } from "express";
 import { Account } from "../models/account";
 import { v4 as uuidv4 } from "uuid";
-
+import cors from "cors";
 import { scryptSync, randomBytes, timingSafeEqual } from "crypto";
 import { sign } from "jsonwebtoken";
 import { Token } from "../models/token";
@@ -54,7 +54,7 @@ router.post("/create", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/login", async (req: Request, res: Response) => {
+router.post("/login", async (req: Request, res: Response) => {
   try {
     const email: string = req.body.email;
     const password: string = req.body.password;

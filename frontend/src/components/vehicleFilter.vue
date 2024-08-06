@@ -43,7 +43,7 @@ export default {
       this.$emit('add_type', value, 'medium-car')
     },
     filter_add_large(value) {
-      this.$emit('add_type', value, 'large-car')
+      this.$emit('add_type', value, 'big-car')
     },
     filter_add_estate(value) {
       this.$emit('add_type', value, 'estate')
