@@ -17,14 +17,6 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/test", authenticateToken, async (req: Request, res: Response) => {
-  try {
-    res.status(200).send({ status: req.user });
-  } catch (err) {
-    res.status(400).send({ error: (err as Error).message });
-  }
-});
-
 router.post("/create", async (req: Request, res: Response) => {
   try {
     const id = uuidv4();
@@ -49,6 +41,14 @@ router.post("/create", async (req: Request, res: Response) => {
     } else {
       res.status(400).send({ error: "email already exists" });
     }
+  } catch (err) {
+    res.status(400).send({ error: (err as Error).message });
+  }
+});
+
+router.get("/info", authenticateToken, async (req: Request, res: Response) => {
+  try {
+    res.status(200).send({ user: req.user });
   } catch (err) {
     res.status(400).send({ error: (err as Error).message });
   }

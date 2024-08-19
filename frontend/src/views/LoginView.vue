@@ -73,7 +73,7 @@ export default {
               Cookies.set('token', token, {
                 expires: 1,
                 secure: true,
-                sameSite: 'none'
+                sameSite: 'None'
               })
               this.$router.push('/')
             }

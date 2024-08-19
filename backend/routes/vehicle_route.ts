@@ -69,4 +69,20 @@ router.get("/search/:location", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/id/:id", async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const vehicle: Vehicle | null = await Vehicle.findOne({
+      where: { id: id },
+    });
+    if (vehicle) {
+      res.status(200).send({ vehicle: vehicle });
+    } else {
+      res.status(200).send({ status: "vehicle not found" });
+    }
+  } catch (err) {
+    res.status(400).send({ error: (err as Error).message });
+  }
+});
+
 export default router;

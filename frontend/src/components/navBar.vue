@@ -5,6 +5,7 @@
       <btn type="go-home" label="Home" @go-home="goToHome" />
       <btn v-if="token == undefined" type="go-login" label="Log in" @go-login="goToLogin" />
       <btn v-if="token == undefined" type="go-signup" label="Sign up" @go-signup="goToSignup" />
+      <btn v-if="token != undefined" type="go-account" label="Account" @go-account="goToAccount" />
       <btn v-if="token != undefined" type="logout" label="Log out" @logout="handleLogout" />
     </div>
   </div>
@@ -31,6 +32,9 @@ export default {
     },
     goToHome() {
       this.$router.push('/')
+    },
+    goToAccount() {
+      this.$router.push('/account')
     },
     handleLogout() {
       Cookies.remove('token', { path: '/' })

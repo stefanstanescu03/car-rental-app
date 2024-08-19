@@ -14,6 +14,14 @@ export default createRouter({
     {
       path: '/signup',
       component: () => import('@/views/SignupView.vue')
+    },
+    {
+      path: '/account',
+      component: () => import('@/views/AccountView.vue')
+    },
+    {
+      path: '/vehicle/:id',
+      component: () => import('@/views/VehicleView.vue')
     }
   ]
 })

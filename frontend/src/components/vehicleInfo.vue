@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row gap-x-5 p-10 items-center justify-start w-full">
-    <img :src="getImgUrl()" alt="img" class="w-44" />
+    <img :src="getImgUrl(id)" alt="img" class="w-44" />
     <div class="flex flex-col gap-y-2 w-2/5">
       <div class="flex flex-row gap-2 items-baseline">
         <h1 class="text-gray-900 text-xl font-semibold font-rubik">{{ car_model }}</h1>
@@ -23,6 +23,7 @@
       <div class="flex flex-row items-center gap-x-5">
         <h1 class="text-gray-900 font-rubik font-semibold">{{ price_per_day }} EUR/DAY</h1>
         <button
+          @click="() => handleRent(id)"
           class="border p-1 w-44 border-gray-900 rounded-md duration-300 hover:bg-gray-900 hover:text-white"
         >
           Rent
@@ -46,8 +47,11 @@ export default {
     'id'
   ],
   methods: {
-    getImgUrl() {
-      return `http://localhost:3000/images/${this.id}.jpg`
+    getImgUrl(id) {
+      return `http://localhost:3000/images/${id}.jpg`
+    },
+    handleRent(id) {
+      this.$router.push(`/vehicle/${id}`)
     }
   }
 }
