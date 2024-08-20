@@ -60,6 +60,7 @@ router.get("/search/:location", async (req: Request, res: Response) => {
         location: {
           [Op.like]: `%${location}%`,
         } as WhereAttributeHash<String>,
+        available: true,
       },
     });
 

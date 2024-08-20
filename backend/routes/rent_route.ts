@@ -33,20 +33,19 @@ router.post(
         return res.status(200).send({ status: "vehicle not available" });
       }
 
-      const today: Date = new Date();
+      const rent_date: Date = new Date(req.body.rent_date);
       const return_date: Date = new Date(req.body.return_date);
-      const diff = return_date.getTime() - today.getTime();
-      const diffDays = Math.ceil(diff / (1000 * 3600 * 24));
 
       const new_rent: RentAtt = {
         id: uuidv4(),
         account_id: user_id,
         vehicle_id: req.body.vehicle_id,
-        rent_date: today,
+        rent_date: rent_date,
         return_date: return_date,
         rent_location: vehicle?.dataValues.location as string,
         return_location: req.body.return_location,
-        total_price: diffDays * (vehicle?.dataValues.price_per_day as number),
+        total_price:
+          req.body.days * (vehicle?.dataValues.price_per_day as number),
       };
 
       await Rent.create(new_rent);

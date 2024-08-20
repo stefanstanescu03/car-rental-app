@@ -1,6 +1,5 @@
 <template>
   <navbar />
-  <!-- <h1>{{ vehicle }}</h1> -->
   <div class="flex flex-row gap-x-5 p-10 items-center justify-start w-full">
     <img :src="getImgUrl()" alt="img" class="w-44" />
     <div class="flex flex-col gap-y-2 w-2/5">
@@ -34,17 +33,58 @@
         {{ vehicle.location }}
       </h1>
       <div class="flex flex-row w-full gap-1">
-        <input type="date" class="w-2/3 border border-gray-900 rounded-md outline-none p-1" />
-        <input type="time" class="w-1/3 border border-gray-900 rounded-md outline-none p-1" />
+        <input
+          v-model="pickup.date"
+          type="date"
+          class="w-2/3 border border-gray-900 rounded-md outline-none p-1"
+        />
+        <input
+          v-model="pickup.hour"
+          type="time"
+          class="w-1/3 border border-gray-900 rounded-md outline-none p-1"
+        />
       </div>
     </div>
     <div class="w-1/4 flex flex-col gap-1">
       <h1 class="font-semibold text-xl p-1">Drop-off</h1>
-      <input type="text" class="w-full border border-gray-900 rounded-md outline-none p-1" />
+      <input
+        v-model="dropoff.location"
+        type="text"
+        class="w-full border border-gray-900 rounded-md outline-none p-1"
+      />
       <div class="flex flex-row w-full gap-1">
-        <input type="date" class="w-2/3 border border-gray-900 rounded-md outline-none p-1" />
-        <input type="time" class="w-1/3 border border-gray-900 rounded-md outline-none p-1" />
+        <input
+          v-model="dropoff.date"
+          type="date"
+          class="w-2/3 border border-gray-900 rounded-md outline-none p-1"
+        />
+        <input
+          v-model="dropoff.hour"
+          type="time"
+          class="w-1/3 border border-gray-900 rounded-md outline-none p-1"
+        />
       </div>
+    </div>
+  </div>
+  <div class="font-rubik w-full flex pt-10 justify-center">
+    <div class="flex flex-col w-1/4">
+      <h1 class="text-lg">
+        Total price:
+        {{
+          ((Date.parse(this.dropoff.date) - Date.parse(this.pickup.date)) / (1000 * 3600 * 24)) *
+          vehicle.price_per_day
+        }}
+        EUR
+      </h1>
+      <button
+        @click="handleRent"
+        class="w-full border border-gray-900 p-1 rounded-md duration-300 hover:bg-gray-900 hover:text-white"
+      >
+        Continue to book
+      </button>
+      <h1 v-if="shouldAppear == true" class="text-red-700 text-sm pt-5 text-center">
+        Please fill every field
+      </h1>
     </div>
   </div>
 </template>
@@ -52,6 +92,7 @@
 <script>
 import navbar from '../components/navBar.vue'
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 export default {
   name: 'vehicle',
@@ -59,10 +100,19 @@ export default {
   data() {
     return {
       vehicle_id: this.$route.params.id,
-      vehicle: {}
+      vehicle: {},
+      pickup: {
+        date: '',
+        hour: ''
+      },
+      dropoff: {
+        date: '',
+        hour: '',
+        location: ''
+      },
+      shouldAppear: false
     }
   },
-
   methods: {
     async handleFetch() {
       await axios
@@ -74,6 +124,39 @@ export default {
     },
     getImgUrl() {
       return `http://localhost:3000/images/${this.vehicle_id}.jpg`
+    },
+    async handleRent() {
+      if (
+        this.pickup.date == '' ||
+        this.pickup.hour == '' ||
+        this.dropoff.date == '' ||
+        this.dropoff.hour == '' ||
+        this.dropoff.location == ''
+      ) {
+        this.shouldAppear = true
+      } else {
+        await axios
+          .post(
+            'http://localhost:3000/rent/create',
+            {
+              vehicle_id: this.vehicle_id,
+              rent_date: new Date(this.pickup.date + ' ' + this.pickup.hour),
+              return_date: new Date(this.dropoff.date + ' ' + this.dropoff.hour),
+              return_location: this.dropoff.location,
+              days:
+                (Date.parse(this.dropoff.date) - Date.parse(this.pickup.date)) / (1000 * 3600 * 24)
+            },
+            {
+              headers: { Authorization: `Bearer ${Cookies.get('token')}` }
+            }
+          )
+          .then((response) => console.log(response.data))
+          .catch((error) => {
+            console.log(error)
+          })
+
+        this.$router.push('/account')
+      }
     }
   },
   mounted() {
