@@ -5,6 +5,7 @@ export interface RentAtt {
   id: string;
   account_id: string;
   vehicle_id: string;
+  vehicle_name: string;
   rent_date: Date;
   return_date: Date;
   rent_location: string;
@@ -46,6 +47,10 @@ Rent.init(
       allowNull: false,
     },
     vehicle_id: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    vehicle_name: {
       type: DataTypes.STRING,
       allowNull: false,
     },

@@ -4,12 +4,32 @@ import { v4 as uuidv4 } from "uuid";
 
 import { Rent, RentAtt } from "../models/rent";
 import { Vehicle } from "../models/vehicle";
+import { where } from "sequelize";
 
 const router: Router = express.Router();
 
 router.get("/test", async (req: Request, res: Response) => {
   try {
     res.status(200).send({ status: "Hello there!" });
+  } catch (err) {
+    res.status(400).send({ error: (err as Error).message });
+  }
+});
+
+router.get("/find", authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const user_id: string = req.user?.id;
+    const rents: Rent[] | null = await Rent.findAll({
+      where: {
+        account_id: user_id,
+      },
+    });
+
+    if (!rents) {
+      res.status(404).send({ status: "No rents found" });
+    } else {
+      res.status(200).send({ rents: rents });
+    }
   } catch (err) {
     res.status(400).send({ error: (err as Error).message });
   }
@@ -40,6 +60,7 @@ router.post(
         id: uuidv4(),
         account_id: user_id,
         vehicle_id: req.body.vehicle_id,
+        vehicle_name: vehicle?.dataValues.car_model as string,
         rent_date: rent_date,
         return_date: return_date,
         rent_location: vehicle?.dataValues.location as string,

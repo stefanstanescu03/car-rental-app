@@ -13,26 +13,37 @@
       Modify
     </button>
     <h1 class="font-bold text-xl pt-5">Cars rented</h1>
+    <rentInfo
+      v-for="car in cars_rented"
+      :id="car.id"
+      :vehicle_id="car.vehicle_id"
+      :vehicle_name="car.vehicle_name"
+      :rent_location="car.rent_location"
+      :return_location="car.return_location"
+      :rent_date="car.rent_date"
+      :return_date="car.return_date"
+    />
   </div>
 </template>
 
 <script>
 import navbar from '../components/navBar.vue'
+import rentInfo from '../components/rentInfo.vue'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 
 export default {
   name: 'account',
-  components: { navbar },
+  components: { navbar, rentInfo },
   data() {
     return {
-      // token: Cookies.get('token')
       user: {
         first_name: '',
         last_name: '',
         email: '',
         phone_number: ''
-      }
+      },
+      cars_rented: []
     }
   },
   methods: {
@@ -46,6 +57,17 @@ export default {
           this.user.first_name = response.data.user.first_name
           this.user.last_name = response.data.user.last_name
           this.user.phone_number = response.data.user.phone_number
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
+      await axios
+        .get('http://localhost:3000/rent/find', {
+          headers: { Authorization: `Bearer ${Cookies.get('token')}` }
+        })
+        .then((response) => {
+          this.cars_rented = response.data.rents
         })
         .catch((error) => {
           console.log(error)
