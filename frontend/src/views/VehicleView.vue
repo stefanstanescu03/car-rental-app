@@ -135,27 +135,32 @@ export default {
       ) {
         this.shouldAppear = true
       } else {
-        await axios
-          .post(
-            'http://localhost:3000/rent/create',
-            {
-              vehicle_id: this.vehicle_id,
-              rent_date: new Date(this.pickup.date + ' ' + this.pickup.hour),
-              return_date: new Date(this.dropoff.date + ' ' + this.dropoff.hour),
-              return_location: this.dropoff.location,
-              days:
-                (Date.parse(this.dropoff.date) - Date.parse(this.pickup.date)) / (1000 * 3600 * 24)
-            },
-            {
-              headers: { Authorization: `Bearer ${Cookies.get('token')}` }
-            }
-          )
-          .then((response) => console.log(response.data))
-          .catch((error) => {
-            console.log(error)
-          })
+        if (!Cookies.get('token')) {
+          this.$router.push('/login')
+        } else {
+          await axios
+            .post(
+              'http://localhost:3000/rent/create',
+              {
+                vehicle_id: this.vehicle_id,
+                rent_date: new Date(this.pickup.date + ' ' + this.pickup.hour),
+                return_date: new Date(this.dropoff.date + ' ' + this.dropoff.hour),
+                return_location: this.dropoff.location,
+                days:
+                  (Date.parse(this.dropoff.date) - Date.parse(this.pickup.date)) /
+                  (1000 * 3600 * 24)
+              },
+              {
+                headers: { Authorization: `Bearer ${Cookies.get('token')}` }
+              }
+            )
+            .then((response) => console.log(response.data))
+            .catch((error) => {
+              console.log(error)
+            })
 
-        this.$router.push('/account')
+          this.$router.push('/account')
+        }
       }
     }
   },
