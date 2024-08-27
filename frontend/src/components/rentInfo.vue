@@ -55,6 +55,7 @@ export default {
           rent_id: id
         }
       })
+      this.$emit('returned')
     }
   }
 }

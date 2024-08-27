@@ -1,5 +1,6 @@
 <template>
   <navbar />
+  <reviewModal v-if="should_appear == true" :vehicle_id="returned_vehicle_id" />
   <div class="flex flex-col p-10 font-rubik text-gray-900">
     <h1 class="font-bold text-xl">Personal details</h1>
     <h1>First Name: {{ user.first_name }}</h1>
@@ -22,6 +23,7 @@
       :return_location="car.return_location"
       :rent_date="car.rent_date"
       :return_date="car.return_date"
+      @returned="handleReview(car.vehicle_id)"
     />
   </div>
 </template>
@@ -29,12 +31,13 @@
 <script>
 import navbar from '../components/navBar.vue'
 import rentInfo from '../components/rentInfo.vue'
+import reviewModal from '../components/reviewModal.vue'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 
 export default {
   name: 'account',
-  components: { navbar, rentInfo },
+  components: { navbar, rentInfo, reviewModal },
   data() {
     return {
       user: {
@@ -43,7 +46,9 @@ export default {
         email: '',
         phone_number: ''
       },
-      cars_rented: []
+      cars_rented: [],
+      should_appear: false,
+      returned_vehicle_id: ''
     }
   },
   methods: {
@@ -72,6 +77,10 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+    },
+    handleReview(id) {
+      this.returned_vehicle_id = id
+      this.should_appear = true
     }
   },
   mounted() {
