@@ -22,6 +22,10 @@ export default createRouter({
     {
       path: '/vehicle/:id',
       component: () => import('@/views/VehicleView.vue')
+    },
+    {
+      path: '/payment/infos=:infos&price=:price',
+      component: () => import('@/views/PaymentView.vue')
     }
   ]
 })
