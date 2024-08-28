@@ -26,6 +26,10 @@ export default createRouter({
     {
       path: '/payment/infos=:infos&price=:price',
       component: () => import('@/views/PaymentView.vue')
+    },
+    {
+      path: '/modify',
+      component: () => import('@/views/ModifyView.vue')
     }
   ]
 })

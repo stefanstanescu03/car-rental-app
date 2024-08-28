@@ -21,6 +21,9 @@
         <img src="../static/suitcase.png" alt="img" width="25" height="25" />
         <h1 class="text-gray-900 font-rubik">{{ vehicle.capacity }}</h1>
       </div>
+      <div class="flex w-10 h-10 bg-gray-900 border rounded-md justify-center items-center">
+        <h1 class="text-white font-rubik font-bold">{{ Math.round(rating * 10) / 10 }}</h1>
+      </div>
       <div class="flex flex-row items-center gap-x-5">
         <h1 class="text-gray-900 font-rubik font-semibold">{{ vehicle.price_per_day }} EUR/DAY</h1>
       </div>
@@ -110,6 +113,7 @@ export default {
         hour: '',
         location: ''
       },
+      rating: 0,
       shouldAppear: false
     }
   },
@@ -119,6 +123,17 @@ export default {
         .get(`http://localhost:3000/vehicle/id/${this.vehicle_id}`)
         .then((response) => {
           this.vehicle = response.data.vehicle
+        })
+        .catch((error) => console.log(error))
+      await axios
+        .get(`http://localhost:3000/review/${this.vehicle_id}`)
+        .then((response) => {
+          const reviews = response.data.reviews
+          reviews.forEach((review) => {
+            this.rating += review.rating
+          })
+          this.rating /= reviews.length
+          console.log(this.rating)
         })
         .catch((error) => console.log(error))
     },
@@ -138,27 +153,6 @@ export default {
         if (!Cookies.get('token')) {
           this.$router.push('/login')
         } else {
-          // await axios
-          //   .post(
-          //     'http://localhost:3000/rent/create',
-          // {
-          //   vehicle_id: this.vehicle_id,
-          //   rent_date: new Date(this.pickup.date + ' ' + this.pickup.hour),
-          //   return_date: new Date(this.dropoff.date + ' ' + this.dropoff.hour),
-          //   return_location: this.dropoff.location,
-          //   days:
-          //     (Date.parse(this.dropoff.date) - Date.parse(this.pickup.date)) /
-          //     (1000 * 3600 * 24)
-          // },
-          //     {
-          //       headers: { Authorization: `Bearer ${Cookies.get('token')}` }
-          //     }
-          //   )
-          //   .then((response) => console.log(response.data))
-          //   .catch((error) => {
-          //     console.log(error)
-          //   })
-
           const rentInfo = JSON.stringify({
             vehicle_id: this.vehicle_id,
             rent_date: new Date(this.pickup.date + ' ' + this.pickup.hour),

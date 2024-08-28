@@ -8,7 +8,7 @@
     <h1>Email: {{ user.email }}</h1>
     <h1>Phone Number: {{ user.phone_number }}</h1>
     <button
-      @click="handleLogin"
+      @click="handleModify"
       class="w-1/4 border border-gray-900 p-1 rounded-md duration-300 hover:bg-gray-900 hover:text-white"
     >
       Modify
@@ -81,6 +81,9 @@ export default {
     handleReview(id) {
       this.returned_vehicle_id = id
       this.should_appear = true
+    },
+    handleModify() {
+      this.$router.push('/modify')
     }
   },
   mounted() {

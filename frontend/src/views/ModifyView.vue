@@ -1,7 +1,6 @@
 <template>
-  <navbar />
   <div class="flex flex-col py-10 gap-4 items-center content-center">
-    <h1 class="font-rubik font-semibold text-gray-900 text-xl">Sign up</h1>
+    <h1 class="font-rubik font-semibold text-gray-900 text-xl">Modify account details</h1>
     <h1 v-if="shouldAppear == true" class="text-center text-red-700">Please fill every field</h1>
     <div class="flex flex-col w-1/3">
       <label for="firstname" class="font-rubik text-gray-600">First name</label>
@@ -24,7 +23,7 @@
     <div class="flex flex-col w-1/3">
       <label for="phone" class="font-rubik text-gray-600">Phone</label>
       <input
-        v-model="phone"
+        v-model="phone_number"
         type="tel"
         name="phone"
         class="w-full border border-gray-900 rounded-md outline-none p-1 font-rubik"
@@ -39,68 +38,78 @@
         class="w-full border border-gray-900 rounded-md outline-none p-1 font-rubik"
       />
     </div>
-    <div class="flex flex-col w-1/3">
-      <label for="password" class="font-rubik text-gray-600">Password</label>
-      <input
-        v-model="password"
-        type="password"
-        name="password"
-        class="w-full border border-gray-900 rounded-md outline-none p-1 font-rubik"
-      />
-    </div>
     <button
       class="w-1/3 border border-gray-900 p-1 rounded-md duration-300 hover:bg-gray-900 hover:text-white"
-      @click="handleSignUp"
+      @click="handleModify"
     >
-      Sign up
+      Modify
     </button>
   </div>
 </template>
 
 <script>
-import navbar from '../components/navBar.vue'
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 export default {
-  name: 'signup',
+  name: 'modify',
   data() {
     return {
       first_name: '',
       last_name: '',
-      phone: '',
       email: '',
-      password: '',
+      phone_number: '',
       shouldAppear: false
     }
   },
-  components: { navbar },
   methods: {
-    async handleSignUp() {
+    async handleFetch() {
+      await axios
+        .get('http://localhost:3000/account/info', {
+          headers: { Authorization: `Bearer ${Cookies.get('token')}` }
+        })
+        .then((response) => {
+          this.email = response.data.user.email
+          this.first_name = response.data.user.first_name
+          this.last_name = response.data.user.last_name
+          this.phone_number = response.data.user.phone_number
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    async handleModify() {
       if (
         this.first_name != '' &&
         this.last_name != '' &&
         this.phone_number != '' &&
-        this.email != '' &&
-        this.password != ''
+        this.email != ''
       ) {
         await axios
-          .post('http://localhost:3000/account/create', {
-            first_name: this.first_name,
-            last_name: this.last_name,
-            phone_number: this.phone,
-            email: this.email,
-            password: this.password,
-            admin: false
+          .put(
+            'http://localhost:3000/account/modify',
+            {
+              first_name: this.first_name,
+              last_name: this.last_name,
+              email: this.email,
+              phone_number: this.phone_number
+            },
+            {
+              headers: { Authorization: `Bearer ${Cookies.get('token')}` }
+            }
+          )
+          .then((response) => {
+            console.log(response)
+            this.$router.push('/account')
           })
-          .then((response) => console.log(response))
-          .catch((error) => {
-            console.log(error)
-          })
-        this.$router.push('/login')
+          .catch((error) => console.log(error))
       } else {
         this.shouldAppear = true
       }
     }
+  },
+  mounted() {
+    this.handleFetch()
   }
 }
 </script>
